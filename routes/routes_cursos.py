@@ -1,0 +1,22 @@
+from fastapi import APIRouter, Body, Request, Response, HTTPException, status
+from fastapi.encoders import jsonable_encoder
+from typing import List
+
+from models.cursos import ListModelCursos, ListUpdateModelCursos
+
+router = APIRouter()
+COLLECTION_NAME = "cursos"
+
+@router.get("/listar-cursos", response_description='Listar cursos', status_code=status.HTTP_201_CREATED, response_model=List[ListModelCursos])
+def listar_cursos(request: Request):
+    cusosDb = list(request.app.database[COLLECTION_NAME].find(limit=50))
+    return cusosDb
+
+@router.post("/criar-curso", response_description='Cadastrar curso', status_code=status.HTTP_201_CREATED,response_model=ListModelCursos)
+def create_list(request: Request, list: ListModelCursos = Body(...)):
+    list = jsonable_encoder(list)
+    new_list_item = request.app.database[COLLECTION_NAME].insert_one(list)
+    created_list_item = request.app.database[COLLECTION_NAME].find_one({
+        "_id": new_list_item.inserted_id
+    })
+    return created_list_item
