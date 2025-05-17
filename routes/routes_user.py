@@ -31,7 +31,6 @@ def delete_aluno(id: str, request: Request, response: Response):
         return response
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Item with {id} not found")
 
-
 @router.put("/atualizar-aluno",response_description="update the item in list", response_model=ListModel)
 def update_item(id: str, request: Request, list: ListUpdateModel = Body(...)):
     listItems = {}
@@ -54,3 +53,10 @@ def update_item(id: str, request: Request, list: ListUpdateModel = Body(...)):
         return updated_list_item
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"ListItem with ID {id} not found")
+
+@router.get("/buscar-aluno-cpf", response_description="Buscar aluno pelo CPF", response_model=ListModel)
+def buscar_aluno_cpf(cpf: str, request: Request):
+    aluno = request.app.database[COLLECTION_NAME].find_one({"cpf": cpf})
+    if aluno is not None:
+        return aluno
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Não existe aluno para este cpf: {cpf}")
