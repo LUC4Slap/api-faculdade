@@ -20,3 +20,35 @@ def create_list(request: Request, list: ListModelCursos = Body(...)):
         "_id": new_list_item.inserted_id
     })
     return created_list_item
+
+@router.put("/atualizar-curso",response_description="Atualizar Curso", response_model=ListModelCursos)
+def update_curso(id: str, request: Request, list: ListModelCursos = Body(...)):
+    listItems = {}
+    for k,v in list.dict().items():
+        if v is not None:
+            listItems = {k:v}
+
+    print(listItems)
+    # if list.title | list.description:
+    update_result = request.app.database[COLLECTION_NAME].update_one({"_id": id }, {"$set": listItems })
+    # print("update result ",update_result.modified_count)
+
+    if update_result.modified_count == 0:
+            raise HTTPException(status_code=status.HTTP_304_NOT_MODIFIED, detail=f"Item with ID {id} has not been modified")
+
+
+    if (
+        updated_list_item := request.app.database[COLLECTION_NAME].find_one({"_id": id})
+    ) is not None:
+        return updated_list_item
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"ListItem with ID {id} not found")
+
+@router.delete('/delete-curso', response_description="Deleta Curso")
+def delete_curso(id: str, request: Request, response: Response):
+    delete_result = request.app.database[COLLECTION_NAME].delete_one({"_id": id})
+
+    if delete_result.deleted_count == 1:
+        response.status_code = status.HTTP_204_NO_CONTENT
+        return response
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Item with {id} not found")
