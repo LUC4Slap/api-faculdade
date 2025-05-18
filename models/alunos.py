@@ -1,12 +1,12 @@
 from typing import Optional
 import uuid;
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 
 class ListModel(BaseModel):
     id:str = Field(default_factory=uuid.uuid4, alias="_id")
     nome: str
     sobrenome: str
-    email: str
+    email: EmailStr
     cpf: str
     rua: str
     bairro: str
