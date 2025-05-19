@@ -3,6 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from typing import List
 
 from models.alunos import ListModel, ListUpdateModel
+from models.alunoComCursosModel import AlunoComCursosModel
 
 router = APIRouter()
 COLLECTION_NAME = "alunos"
@@ -17,10 +18,24 @@ def create_list(request: Request, list: ListModel = Body(...)):
 
     return created_list_item
 
-@router.get('/listar-alunos', response_description='Cadastrar aluno', status_code=status.HTTP_201_CREATED,response_model=List[ListModel])
+@router.get('/listar-alunos', response_description='Cadastrar aluno', status_code=status.HTTP_201_CREATED,response_model=List[AlunoComCursosModel])
 def listar_alunos(request: Request):
-    alunosdb = list(request.app.database[COLLECTION_NAME].find(limit=50))
-    return alunosdb
+    pipeline = [
+        {
+            "$lookup": {
+                "from": "cursos",  # nome da collection de cursos
+                "localField": "cursos",  # campo no documento de aluno
+                "foreignField": "_id",  # campo na collection de cursos
+                "as": "cursos_info"  # nome do novo campo com dados dos cursos
+            }
+        },
+        {
+            "$limit": 50
+        }
+    ]
+
+    alunos_com_cursos = list(request.app.database["alunos"].aggregate(pipeline))
+    return alunos_com_cursos
 
 @router.delete('/delete-aluno', response_description="Deleta aluno")
 def delete_aluno(id: str, request: Request, response: Response):

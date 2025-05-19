@@ -1,5 +1,17 @@
-/.venv
+# Virtual envs
+.venv/
+env/
+ENV/
+venv/
+
+# Configs sensíveis
 .env
-*/__pycache__/
-.idea
-*/__pycache__/*
+
+# Pycache
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# IDEs
+.idea/
+.vscode/
