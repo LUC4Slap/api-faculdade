@@ -14,12 +14,12 @@ class ListModel(BaseModel):
     cep: str
     cursos: List[str]
 
-class ListUpdateModel(BaseModel):
-    nome: Optional[str]
-    sobrenome: Optional[str]
-    email: Optional[str]
-    cpf: Optional[str]
-    rua: Optional[str]
-    bairro: Optional[str]
-    cep: Optional[str]
-    cursos: Optional[List[str]]
+class UpdateModel(BaseModel):
+    nome: Optional[str] = None
+    sobrenome: Optional[str] = None
+    email: Optional[str] = None
+    cpf: Optional[str] = None
+    rua: Optional[str] = None
+    bairro: Optional[str] = None
+    cep: Optional[str] = None
+    cursos: Optional[List[str]] = None

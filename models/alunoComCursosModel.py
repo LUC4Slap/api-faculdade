@@ -8,7 +8,7 @@ class CursoModel(BaseModel):
     nome: str
     carga_horaria: str
     descricao: str
-    media_aprovacao: int
+    media_aprovacao: float
 
 class AlunoComCursosModel(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
