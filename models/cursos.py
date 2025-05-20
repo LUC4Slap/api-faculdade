@@ -8,10 +8,10 @@ class ListModelCursos(BaseModel):
     nome: str
     carga_horaria: str
     descricao: str
-    media_aprovacao: int
+    media_aprovacao: float
 
-class ListUpdateModelCursos(BaseModel):
-    nome: Optional[str]
-    carga_horaria: Optional[str]
-    descricao: Optional[str]
-    media_aprovacao: Optional[int]
+class UpdateModelCursos(BaseModel):
+    nome: Optional[str] = None
+    carga_horaria: Optional[str] = None
+    descricao: Optional[str] = None
+    media_aprovacao: Optional[float] = None
