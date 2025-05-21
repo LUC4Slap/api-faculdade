@@ -1,16 +1,17 @@
-from fastapi import APIRouter, Body, Request, Response, HTTPException, status
+from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
 from typing import List
 
+from dependencias.curso_dependece import get_curso_service
 from models.cursos import ListModelCursos, UpdateModelCursos
+from services.curso_service import CursoService
 
 router = APIRouter()
 COLLECTION_NAME = "cursos"
 
 @router.get("/listar-cursos", response_description='Listar cursos', status_code=status.HTTP_201_CREATED, response_model=List[ListModelCursos])
-def listar_cursos(request: Request):
-    cusosDb = list(request.app.database[COLLECTION_NAME].find(limit=50))
-    return cusosDb
+def listar_cursos(service: CursoService = Depends(get_curso_service)):
+    return service.listar_cursos()
 
 @router.post("/criar-curso", response_description='Cadastrar curso', status_code=status.HTTP_201_CREATED,response_model=ListModelCursos)
 def create_list(request: Request, list: ListModelCursos = Body(...)):
