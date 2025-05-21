@@ -64,5 +64,5 @@ def seed_alunos(qtd=1000000, curso_ids=None):
         print(f"{qtd} alunos inseridos.")
 
 if __name__ == "__main__":
-    curso_ids = seed_cursos(qtd=50000)
-    seed_alunos(qtd=1000000, curso_ids=curso_ids)
+    curso_ids = seed_cursos(qtd=500)
+    seed_alunos(qtd=10000, curso_ids=curso_ids)
