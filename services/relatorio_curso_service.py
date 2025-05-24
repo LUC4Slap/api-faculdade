@@ -16,3 +16,30 @@ class RelatorioService():
         self.collection = self.db["cursos"]
         self.alunoCollection = self.db["alunos"]
         self.request = request
+        self.caminho_wkhtmltopdf = None #os.path.join("htmlToPdfBin", "wkhtmltopdf")
+
+    def gerar_relatorio_curso(self, filtros):
+        env = Environment(loader=FileSystemLoader("templates"))
+        template = env.get_template("relatorio_cursos.html")
+
+        cursos_cursor = self.collection.find({"media_aprovacao": {"$gt": filtros}})
+        relatorio_dados = []
+
+        for curso_doc in cursos_cursor:
+            curso = CursoModel(**curso_doc)
+
+            alunos_cursor = self.alunoCollection.find({"cursos": curso.id})
+            alunos = [AlunoComCursosModel(**a) for a in alunos_cursor]
+
+            relatorio_dados.append({
+                "curso": curso,
+                "alunos": alunos
+            })
+
+        html = template.render(dados=relatorio_dados)
+        config = pdfkit.configuration()
+
+        pdf_path = "/tmp/relatorio_cursos.pdf"
+        pdfkit.from_string(html, pdf_path, configuration=config)
+
+        return pdf_path

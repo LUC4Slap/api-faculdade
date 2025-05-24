@@ -2,10 +2,14 @@ from fastapi import APIRouter, Body, Request, Response, HTTPException, status, D
 from fastapi.encoders import jsonable_encoder
 from typing import List
 
+from starlette.responses import StreamingResponse
+
 from dependencias.curso_dependece import get_curso_service
+from dependencias.relatorio_dependece import get_relatorio_service
 from models.cursos import ListModelCursos, UpdateModelCursos
 from models.paginacaoModel import PaginacaoAlunosResponse
 from services.curso_service import CursoService
+from services.relatorio_curso_service import RelatorioService
 
 router = APIRouter()
 COLLECTION_NAME = "cursos"
@@ -34,3 +38,10 @@ def update_curso(id: str, curso_update: UpdateModelCursos = Body(...), service: 
 @router.delete('/delete-curso', response_description="Deleta Curso")
 def delete_curso(id: str, service: CursoService = Depends(get_curso_service)):
     return service.deletar_curso(id)
+
+@router.get("/relatorio-cusos", response_description="Relatório de curso", response_class=StreamingResponse)
+def relatorio_curso(media: float, service: RelatorioService = Depends(get_relatorio_service)):
+    headers = {'Content-Disposition': 'inline; filename="out.pdf"'}
+    path = service.gerar_relatorio_curso(media)
+    file_like = open(path, mode="rb")
+    return StreamingResponse(file_like, headers=headers, media_type='application/pdf')

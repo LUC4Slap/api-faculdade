@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório Cursos</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .curso { margin-bottom: 30px; }
+        .aluno { margin-left: 20px; }
+    </style>
+</head>
+<body>
+    {% for item in dados %}
+        <div class="curso">
+            <h2>{{ item.curso.nome }} - Média aprovação: {{ item.curso.media_aprovacao }}</h2>
+            <h3>Alunos:</h3>
+            {% if item.alunos %}
+                <ul>
+                    {% for aluno in item.alunos %}
+                        <li class="aluno">{{ aluno.nome }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="aluno">Nenhum aluno neste curso.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    {% if dados|length == 0 %}
+        <h1>Sem cursos com a média especificada.</h1>
+    {% endif %}
+</body>
+</html>

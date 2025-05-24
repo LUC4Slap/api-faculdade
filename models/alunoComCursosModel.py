@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, Field, EmailStr
 import uuid
 
@@ -21,6 +21,7 @@ class AlunoComCursosModel(BaseModel):
     cep: str
     cursos: List[str]
     cursos_info: List[CursoModel]
+    cursos_info: Optional[List[CursoModel]] = None
 
     class Config:
         allow_population_by_field_name = True

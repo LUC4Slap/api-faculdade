@@ -3,6 +3,9 @@ import uuid;
 from pydantic import BaseModel, Field, EmailStr
 from typing import List
 
+from models.alunoComCursosModel import CursoModel
+
+
 class ListModel(BaseModel):
     id:str = Field(default_factory=uuid.uuid4, alias="_id")
     nome: str
@@ -13,6 +16,7 @@ class ListModel(BaseModel):
     bairro: str
     cep: str
     cursos: List[str]
+    cursos_info: Optional[List[CursoModel]] = None
 
 class UpdateModel(BaseModel):
     nome: Optional[str] = None

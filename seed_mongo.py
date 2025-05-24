@@ -20,7 +20,7 @@ alunos_collection.delete_many({})
 faker = Faker("pt_BR")
 
 # Gerar cursos
-def seed_cursos(qtd=50000):
+def seed_cursos(qtd=500):
     cursos = []
     for _ in range(qtd):
         curso = {
@@ -36,7 +36,7 @@ def seed_cursos(qtd=50000):
     return [curso["_id"] for curso in cursos]
 
 # Gerar alunos
-def seed_alunos(qtd=1000000, curso_ids=None):
+def seed_alunos(qtd=10000, curso_ids=None):
     alunos = []
     for i in range(qtd):
         aluno = {
