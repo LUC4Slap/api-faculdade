@@ -6,6 +6,7 @@ from starlette.responses import StreamingResponse
 
 from dependencias.curso_dependece import get_curso_service
 from dependencias.relatorio_dependece import get_relatorio_service
+from dtos.relatorio_curso_dto import RelatroioCursoDto
 from models.cursos import ListModelCursos, UpdateModelCursos
 from models.paginacaoModel import PaginacaoAlunosResponse
 from services.curso_service import CursoService
@@ -39,9 +40,9 @@ def update_curso(id: str, curso_update: UpdateModelCursos = Body(...), service: 
 def delete_curso(id: str, service: CursoService = Depends(get_curso_service)):
     return service.deletar_curso(id)
 
-@router.get("/relatorio-cusos", response_description="Relatório de curso", response_class=StreamingResponse)
-def relatorio_curso(media: float, service: RelatorioService = Depends(get_relatorio_service)):
+@router.post("/relatorio-media-cursos", response_description="Relatório de curso", response_class=StreamingResponse)
+def relatorio_curso(dto: RelatroioCursoDto, service: RelatorioService = Depends(get_relatorio_service)):
     headers = {'Content-Disposition': 'inline; filename="out.pdf"'}
-    path = service.gerar_relatorio_curso(media)
+    path = service.gerar_relatorio_curso(dto)
     file_like = open(path, mode="rb")
     return StreamingResponse(file_like, headers=headers, media_type='application/pdf')

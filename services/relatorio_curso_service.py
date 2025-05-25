@@ -5,6 +5,7 @@ from datetime import datetime
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Query
 from fastapi.encoders import jsonable_encoder
 
+from dtos.relatorio_curso_dto import RelatroioCursoDto
 from models.alunoComCursosModel import CursoModel, AlunoComCursosModel
 from models.cursos import ListModelCursos
 from models.paginacaoModel import PaginacaoAlunosResponse
@@ -18,11 +19,20 @@ class RelatorioService():
         self.request = request
         self.caminho_wkhtmltopdf = None #os.path.join("htmlToPdfBin", "wkhtmltopdf")
 
-    def gerar_relatorio_curso(self, filtros):
+    def gerar_relatorio_curso(self, dto: RelatroioCursoDto):
         env = Environment(loader=FileSystemLoader("templates"))
         template = env.get_template("relatorio_cursos.html")
+        operator = ""
+        titulo = ""
 
-        cursos_cursor = self.collection.find({"media_aprovacao": {"$gt": filtros}})
+        if dto.gte:
+            operator = "$gte"
+            titulo = f"Relatório para media maiores que {dto.media}"
+        elif dto.lte:
+            operator = "$lte"
+            titulo = f"Relatório para media menores que {dto.media}"
+
+        cursos_cursor = self.collection.find({"media_aprovacao": {operator: dto.media}})
         relatorio_dados = []
 
         for curso_doc in cursos_cursor:
@@ -36,7 +46,7 @@ class RelatorioService():
                 "alunos": alunos
             })
 
-        html = template.render(dados=relatorio_dados)
+        html = template.render(dados=relatorio_dados, titulo=titulo)
         config = pdfkit.configuration()
 
         pdf_path = "/tmp/relatorio_cursos.pdf"

@@ -7,9 +7,20 @@
         body { font-family: Arial, sans-serif; }
         .curso { margin-bottom: 30px; }
         .aluno { margin-left: 20px; }
+        .container: {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            padding: 3px;
+            border: 1px solid red;
+        }
     </style>
 </head>
 <body>
+    <div style="display: flex; width: 100%; justify-content: center; align-items: center; padding: 3px; border: 1px solid red;">
+        <h1 style="color: red;">{{titulo}}</h1>
+    </div>
     {% for item in dados %}
         <div class="curso">
             <h2>{{ item.curso.nome }} - Média aprovação: {{ item.curso.media_aprovacao }}</h2>
