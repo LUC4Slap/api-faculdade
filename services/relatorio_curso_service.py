@@ -7,8 +7,6 @@ from fastapi.encoders import jsonable_encoder
 
 from dtos.relatorio_curso_dto import RelatroioCursoDto
 from models.alunoComCursosModel import CursoModel, AlunoComCursosModel
-from models.cursos import ListModelCursos
-from models.paginacaoModel import PaginacaoAlunosResponse
 
 
 class RelatorioService():
