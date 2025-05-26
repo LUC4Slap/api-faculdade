@@ -31,6 +31,11 @@ class RelatorioService():
         elif dto.lte:
             operator = "$lte"
             titulo = f"Relatório para media menores que {dto.media}"
+        elif dto.lte == False and dto.gte == False:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Deve se passar algum parametro com True para gerar o relatorio"
+            )
 
         cursos_cursor = self.collection.find({"media_aprovacao": {operator: dto.media}})
         relatorio_dados = []
